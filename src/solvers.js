@@ -94,10 +94,6 @@ window.findNQueensSolution = function(n) {
       }
       b.togglePiece(row, col);
     }
-    //case for no possible solutions
-    if(row === 0){
-      solution = b.rows();  
-    }
     
   }
 
@@ -105,7 +101,7 @@ window.findNQueensSolution = function(n) {
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   console.log(solution);
-  return solution[0];
+  return solution[0] || b.rows();
 };
 
 
