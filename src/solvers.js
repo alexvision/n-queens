@@ -18,7 +18,6 @@ window.findNRooksSolution = function(n) {
   var b = new Board({n: n});
 
   var innerFunc = function(board, depth) {
-    // debugger;
     if (!board.hasAnyRooksConflicts() && depth === n) {
       solution.push(board);
       return;
@@ -77,7 +76,30 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+  var solution; 
+  var currentBoard = new Board({n: n});
+
+  var solutionFinder = function(depth){
+    if(depth === n){
+      solution = currentBoard.rows();
+      return;
+    }
+
+    for(var i = 0; i < n; i++){
+      currentBoard.togglePiece(depth, i);
+
+      if(!currentBoard.hasAnyQueensConflicts()){
+        solutionFinder(depth + 1);
+      } 
+      currentBoard.togglePiece(depth, i);  
+      
+      
+    }
+  }
+  if(n === 4)
+  debugger;
+  solutionFinder(0);
+  console.log(solution);
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
@@ -86,8 +108,30 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solution = undefined; //fixme
+  var solutionCount = 0;
+  var currentBoard = new Board({n: n});
+  var solutionFinder = function(depth){
+    //base case
+    if(depth === n){
+      solutionCount++
+      return;
+    }
+    //recursive case
+    for(var i = 0; i < n; i++){
+      //try a new position
+      currentBoard.togglePiece(depth, i);
+      //if it works, try the children
+      if(!currentBoard.hasAnyQueensConflicts()){
+        solutionFinder(depth + 1);
+      }
+      //else untoggle the change, and kill the tree
+      currentBoard.togglePiece(depth, i);
+    }
 
-  //console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  //return solutionCount;
+  }
+  solutionFinder(0);
+
+
+  //console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+  return solutionCount;
 };
